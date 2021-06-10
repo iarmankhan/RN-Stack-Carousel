@@ -9,7 +9,7 @@ interface OverflowItemsProps {
 }
 
 const OVERFLOW_HEIGHT = 80
-const SPACING = 10
+export const SPACING = 10
 
 const OverflowItems: React.FC<OverflowItemsProps> = ({data, scrollX}) => {
     return <View style={styles.container}>
