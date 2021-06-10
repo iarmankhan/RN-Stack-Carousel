@@ -12,31 +12,38 @@ const OVERFLOW_HEIGHT = 80
 export const SPACING = 10
 
 const OverflowItems: React.FC<OverflowItemsProps> = ({data, scrollX}) => {
-    return <View style={styles.container}>
-        <Animated.View>
-            {
-                data.map((item, index) => (
-                    <View key={index} style={styles.itemContainer}>
-                        <Text style={[styles.title]} numberOfLines={1}>
-                            {item.title}
-                        </Text>
-                        <View style={styles.itemContainerRow}>
-                            <Text style={[styles.location]}>
-                                <EvilIcons
-                                    name='location'
-                                    size={16}
-                                    color='black'
-                                    style={{marginRight: 5}}
-                                />
-                                {item.location}
+    const inputRange = [-1, 0, 1];
+    const translateY = scrollX.interpolate({
+        inputRange,
+        outputRange: [OVERFLOW_HEIGHT, 0, -OVERFLOW_HEIGHT],
+    });
+    return (
+        <View style={styles.container}>
+            <Animated.View style={{transform: [{translateY}]}}>
+                {
+                    data.map((item, index) => (
+                        <View key={index} style={styles.itemContainer}>
+                            <Text style={[styles.title]} numberOfLines={1}>
+                                {item.title}
                             </Text>
-                            <Text style={[styles.date]}>{item.date}</Text>
+                            <View style={styles.itemContainerRow}>
+                                <Text style={[styles.location]}>
+                                    <EvilIcons
+                                        name='location'
+                                        size={16}
+                                        color='black'
+                                        style={{marginRight: 5}}
+                                    />
+                                    {item.location}
+                                </Text>
+                                <Text style={[styles.date]}>{item.date}</Text>
+                            </View>
                         </View>
-                    </View>
-                ))
-            }
-        </Animated.View>
-    </View>;
+                    ))
+                }
+            </Animated.View>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
