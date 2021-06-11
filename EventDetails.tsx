@@ -1,11 +1,13 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
+import {HomeNavigationProps} from "./App";
 
-interface EventDetailsProps {
-}
 
-const EventDetails: React.FC<EventDetailsProps> = () => {
-    return <View />;
+const EventDetails: React.FC<HomeNavigationProps<'EventDetails'>> = ({route}) => {
+    const {item} = route.params
+    return <View>
+        <Text>{item.title}</Text>
+    </View>;
 };
 
 

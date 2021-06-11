@@ -1,9 +1,11 @@
 import React, {useRef, useState} from 'react';
-import {Animated, Dimensions, FlatList, Image, SafeAreaView, StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, FlatList, Image, SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {DATA, ITEM} from "./data";
 import {Directions, FlingGestureHandler, State} from "react-native-gesture-handler";
 import {StatusBar} from "expo-status-bar";
 import OverflowItems, {SPACING} from "./OverflowItems";
+import {StackNavigationProp} from "@react-navigation/stack";
+import {HomeNavigationProps} from "./App";
 
 interface EventsProps {
 }
@@ -16,7 +18,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 1.7;
 const VISIBLE_ITEMS = 3;
 
 
-const Events: React.FC<EventsProps> = () => {
+const Events: React.FC<HomeNavigationProps<'Events'>> = ({navigation}) => {
     const [data, setData] = useState<ITEM[]>(DATA)
     const scrollXIndex = useRef(new Animated.Value(0)).current;
     const scrollXAnimated = useRef(new Animated.Value(0)).current;
@@ -94,8 +96,8 @@ const Events: React.FC<EventsProps> = () => {
                                 </View>
                             )
                         }}
-                        renderItem={({item, index}) => {
-                            const inputRange = [index - 1, index, index + 1]
+                        renderItem={({item, index: i}) => {
+                            const inputRange = [i - 1, i, i + 1]
                             const translateX = scrollXAnimated.interpolate({
                                 inputRange,
                                 outputRange: [50, 0, -100]
@@ -109,23 +111,27 @@ const Events: React.FC<EventsProps> = () => {
                                 outputRange: [1 - 1 / VISIBLE_ITEMS, 1, 0],
                             });
                             return (
-                                <Animated.View
-                                    style={{
-                                        position: 'absolute',
-                                        left: -ITEM_WIDTH / 2,
-                                        opacity,
-                                        transform: [{translateX}, {scale}]
-                                    }}
-                                >
-                                    <Image
-                                        source={{uri: item.poster}}
+                                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('EventDetails', {item: data[index]})}>
+                                    <Animated.View
                                         style={{
-                                            width: ITEM_WIDTH,
-                                            height: ITEM_HEIGHT,
-                                            borderRadius: 14,
+                                            position: 'absolute',
+                                            left: -ITEM_WIDTH / 2,
+                                            opacity,
+                                            transform: [{translateX}, {scale}]
                                         }}
-                                    />
-                                </Animated.View>
+                                    >
+
+                                        <Image
+                                            source={{uri: item.poster}}
+                                            style={{
+                                                width: ITEM_WIDTH,
+                                                height: ITEM_HEIGHT,
+                                                borderRadius: 14,
+                                            }}
+                                        />
+
+                                    </Animated.View>
+                                </TouchableOpacity>
                             )
                         }}
                     />
