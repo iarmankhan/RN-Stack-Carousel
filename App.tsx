@@ -6,11 +6,11 @@ import {createSharedElementStackNavigator} from "react-navigation-shared-element
 import Events from "./Events";
 import EventDetails from "./EventDetails";
 import {ITEM} from "./data";
-import {StackNavigationProp} from "@react-navigation/stack";
+import {StackCardInterpolationProps, StackNavigationProp, TransitionSpecs} from "@react-navigation/stack";
 
 type Routes = {
     Events: undefined;
-    EventDetails: {item: ITEM};
+    EventDetails: { item: ITEM };
 }
 
 export interface HomeNavigationProps<RouteName extends keyof Routes> {
@@ -20,14 +20,24 @@ export interface HomeNavigationProps<RouteName extends keyof Routes> {
 
 const Stack = createSharedElementStackNavigator<Routes>();
 
+const forFade = ({ current }: StackCardInterpolationProps) => ({
+    cardStyle: {
+        opacity: current.progress,
+    },
+});
+
+
 export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Events" headerMode='none'>
-                <Stack.Screen name="Events" component={Events} />
+                <Stack.Screen name="Events" component={Events}/>
                 <Stack.Screen
                     name="EventDetails"
                     component={EventDetails}
+                    options={{
+                        cardStyleInterpolator: forFade
+                    }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

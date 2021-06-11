@@ -6,8 +6,9 @@ import {StatusBar} from "expo-status-bar";
 import OverflowItems, {SPACING} from "./OverflowItems";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {HomeNavigationProps} from "./App";
+import {SharedElement} from "react-navigation-shared-element";
 
-const {width} = Dimensions.get('window')
+const {width, height} = Dimensions.get('window')
 
 const ITEM_WIDTH = width * 0.76;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.7;
@@ -76,7 +77,7 @@ const Events: React.FC<HomeNavigationProps<'Events'>> = ({navigation}) => {
                         removeClippedSubviews={false}
                         showsHorizontalScrollIndicator={false}
                         data={data}
-                        keyExtractor={(_, index) => String(index)}
+                        keyExtractor={(item) => item.key.toString()}
                         CellRendererComponent={({
                                                     item,
                                                     index,
@@ -107,7 +108,8 @@ const Events: React.FC<HomeNavigationProps<'Events'>> = ({navigation}) => {
                                 outputRange: [1 - 1 / VISIBLE_ITEMS, 1, 0],
                             });
                             return (
-                                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('EventDetails', {item: data[index]})}>
+                                <TouchableOpacity activeOpacity={0.8}
+                                                  onPress={() => navigation.navigate('EventDetails', {item: DATA[index]})}>
                                     <Animated.View
                                         style={{
                                             position: 'absolute',
@@ -116,21 +118,39 @@ const Events: React.FC<HomeNavigationProps<'Events'>> = ({navigation}) => {
                                             transform: [{translateX}, {scale}]
                                         }}
                                     >
-
-                                        <Image
-                                            source={{uri: item.poster}}
-                                            style={{
-                                                width: ITEM_WIDTH,
-                                                height: ITEM_HEIGHT,
-                                                borderRadius: 14,
-                                            }}
-                                        />
+                                        <SharedElement id={`item.${item.key}.image`}>
+                                            <Image
+                                                source={{uri: item.poster}}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT,
+                                                    borderRadius: 14,
+                                                }}
+                                            />
+                                        </SharedElement>
 
                                     </Animated.View>
                                 </TouchableOpacity>
                             )
                         }}
                     />
+                    <SharedElement
+                        id='general.bg'
+                        style={[
+                            StyleSheet.absoluteFillObject,
+                            {
+                                transform: [{translateY: height}],
+                            }
+                        ]}
+                    >
+                        <View style={[
+                            StyleSheet.absoluteFillObject,
+                            {
+                                backgroundColor: 'red',
+                                borderRadius: 16
+                            }
+                        ]}/>
+                    </SharedElement>
                 </SafeAreaView>
             </FlingGestureHandler>
         </FlingGestureHandler>
