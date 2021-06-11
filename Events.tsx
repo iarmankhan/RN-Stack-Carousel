@@ -7,10 +7,6 @@ import OverflowItems, {SPACING} from "./OverflowItems";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {HomeNavigationProps} from "./App";
 
-interface EventsProps {
-}
-
-
 const {width} = Dimensions.get('window')
 
 const ITEM_WIDTH = width * 0.76;
